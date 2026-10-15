@@ -1,0 +1,10 @@
+*.csv
+*.db
+.ipynb_checkpoints/
+__pycache__/
+.venv/
+.vscode/
+analysis_draft.ipynb
+prac.sql
+prac.ipynb
+olist.session.sql
