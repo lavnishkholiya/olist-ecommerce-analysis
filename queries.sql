@@ -22,7 +22,6 @@ SELECT TO_CHAR(order_purchase_timestamp, 'YYYY-MM') AS month,
  FROM orders
  GROUP BY month 
  ORDER BY month;
-
  
 
 --Q6- monthly revenue (delivered orders only)
@@ -118,7 +117,7 @@ GROUP BY month
 SELECT
     monthly.*,
     LAG(revenue) OVER (ORDER BY month) AS prev_revenue,
-    ROUND(((revenue - (LAG(revenue) OVER (ORDER BY month))) / (LAG(revenue) OVER (ORDER BY month)) * 100), 2) AS growth_pct
+    ROUND(((revenue - (LAG(revenue) OVER (ORDER BY month))) / (LAG(revenue) OVER (ORDER BY month) * 100), 2) AS growth_pct
 FROM monthly   
 ORDER BY month;
 
@@ -149,19 +148,7 @@ ORDER BY month;
 
 
 
---Q13- order counts per customer_unique_id
-SELECT
-    COUNT(order_id) AS order_count,
-    customer_unique_id
-
-FROM orders o
-JOIN customers c   
-ON o.customer_id = c.customer_id 
-GROUP BY customer_unique_id
-
-
-
---Q14- repeat customer rate
+--Q13- repeat customer rate
 WITH customer_orders AS (
     SELECT customer_unique_id,
        COUNT(o.order_id) AS order_count
@@ -178,7 +165,7 @@ FROM customer_orders
 
 
 
---Q15- top 10 sellers by revenue, with a rank.
+--Q14- top 10 sellers by revenue, with a rank.
 SELECT
     s.seller_id,
     ROUND(SUM(price), 2) AS revenue,
@@ -195,7 +182,7 @@ LIMIT 10;
 
 
 
---Q16- payment type share
+--Q15- payment type share
 SELECT payment_type,
        COUNT(*) AS payments,
        ROUND(COUNT(*) * 100.0/SUM(COUNT(*)) OVER (), 2) AS share_pct
@@ -205,7 +192,7 @@ ORDER BY share_pct DESC
 
 
 
---Q17- category share of revenue
+--Q16- category share of revenue
 SELECT product_category_name_english AS category,
     ROUND(SUM(price) * 100.0/SUM(SUM(price)) OVER (), 2) AS revenue_share_pct
 FROM orders o
